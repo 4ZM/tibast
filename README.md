@@ -1,1 +1,1 @@
-Assorted resources for doing DLL injection.
+Mezereum is a collection of assorted resources for doing DLL injection.
