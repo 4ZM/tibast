@@ -5,9 +5,14 @@
 
 using namespace std;
 
+extern "C" {
+  int msg_inject(int process_id, const char* dll);
+}
+
+
 void print_usage() {
 	cout << "Usage: " << endl;
-	cout << "  " << "$ mez pid [dll]" << endl;
+	cout << "  " << "$ tibast pid [dll]" << endl;
 }
 
 int main(int argc, const char* argv[]) {
@@ -17,8 +22,8 @@ int main(int argc, const char* argv[]) {
 	} 
 
 	// First arg is process id to inject into
-	uint32_t pid = ::atoi(argv[1]);
-	if (pid == 0) {
+	int32_t pid = ::atoi(argv[1]);
+	if (pid == 0 || pid < -1) {
 		cout << "Error: Invalid pid argument '" << argv[1] << "'" << endl;
 		return -1;
 	}
@@ -29,12 +34,22 @@ int main(int argc, const char* argv[]) {
 		pill = argv[2];
 	}
 
+	// Convenient way to test payloads
+	if (pid	== -1) {
+		cout << "Injecting into self" << endl;
+		HINSTANCE module = ::LoadLibrary(pill.c_str());
+		if (module == NULL)
+			cout << "Error: Could not find payload" << endl; 
+		return 0;
+	}
+
   cout << "Injecting into pid " << pid;
   if (argc == 3)
   	cout << " with custom payload " << pill; 
   cout << endl;
 
   // do injection
+  msg_inject(pid, pill.c_str());
 
 	return 0;
 }
