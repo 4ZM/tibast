@@ -24,6 +24,7 @@ using namespace std;
 
 extern "C" {
   int msg_inject(int process_id, const char* dll);
+  int thread_inject(int process_id, const char* dll);
 }
 
 
@@ -66,7 +67,8 @@ int main(int argc, const char* argv[]) {
   cout << endl;
 
   // do injection
-  msg_inject(pid, pill.c_str());
+  //msg_inject(pid, pill.c_str());
+  thread_inject(pid, pill.c_str());
 
 	return 0;
 }
